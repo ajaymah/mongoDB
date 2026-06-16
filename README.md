@@ -117,6 +117,23 @@ db.createCollection('collection_name',{
   }
 })
 ```
+**Modify an existing collection`s Schema:**   
+```java
+db.runcommand({
+  collMod: "students"
+  validator:{
+    $jsonSchema:{
+      require:["name","age"],
+      properties:{
+        name:{
+           bsonType:"string",
+           description:"Name must be a string and a required"
+        }
+      }
+    }
+  }
+})
+```
 
 
           
