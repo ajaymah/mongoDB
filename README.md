@@ -134,6 +134,74 @@ db.runcommand({
   }
 })
 ```
+**MongoDB Update commands**  
+```javascript
+// only update one document //
+db.collection_name.updateOne(
+  {field:"val"},  //filter that field as per field name and value
+  { $set:{updated_field:"new_Val"}}  // update
+)
+
+// many update one document //
+db.collection_name.updateMany(
+  {field:"val"},  //filter that field as per field name and value
+  { $set:{updated_field:"new_Val"}}  // update
+)
+
+db.collection_name.updateMany(
+  {},  //filter that field as per field name and value
+  { $rename:{"skills":"coding_skills"}}  // rename key
+)
+
+db.collection_name.updateMany(
+  {},  //filter that field as per field name and value
+  { $currentdatee:{"lastModified":true}}  // if key is not available created lastModified key with val //
+)
+
+```
+**MongoDB Update Oprators**   
+```javascript 
+$unset: Remove the field from the document  
+$rename : Rename the field
+$inc: increment the field value
+$mul: Multiplies the field value
+$currentdate: Set the field value to the current date
+$push: Add an element to an Array // {skills:["html","css"]}
+$pop: Removes the first or last elementsof an array
+$pull: Remove all elements from an array
+$addToSet: add distinct elements to an array(cant add diplicat value)
+```
+MongoDB Delete commands  
+```javascript
+db.collection_name.deleteOne({field1:"val"})
+db.collection_name.deleteMany({field1:"val"})
+db.collection_name.deleteOne({})
+
+```
+**MongoDB Find commands**:  
+```javascript
+db.collection_name.find({"field1": "val"})
+db.collection_name.findOne({"field1": "val"})
+db.collection_name.find()
+```
+
+MongoDB Find with Projection:   
+```javascript
+db.collection_name.find(
+  {"field": "val"},
+  {field1:1, field2:1: field3:0} // 1 will showing, o will not displaying
+   {field1:1, field2:1:} // 0 not require
+)
+
+db.collection_name.find({"field": "val"}).projection(name:1, class:1, id:0)
+db.collection_name.find().limit(3).skip(3) // 4,5,6 will displaying, pagination uses
+```
+**mongoDB Sort:**  
+```javascript
+db.collection_name.find().sort({field:1})
+// ascending order: 1
+// descending order:-1
+```
 
 
           
