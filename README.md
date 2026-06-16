@@ -171,7 +171,7 @@ $pop: Removes the first or last elementsof an array
 $pull: Remove all elements from an array
 $addToSet: add distinct elements to an array(cant add diplicat value)
 ```
-MongoDB Delete commands  
+**MongoDB Delete commands**:  
 ```javascript
 db.collection_name.deleteOne({field1:"val"})
 db.collection_name.deleteMany({field1:"val"})
@@ -185,7 +185,7 @@ db.collection_name.findOne({"field1": "val"})
 db.collection_name.find()
 ```
 
-MongoDB Find with Projection:   
+**MongoDB Find with Projection**:   
 ```javascript
 db.collection_name.find(
   {"field": "val"},
@@ -202,7 +202,7 @@ db.collection_name.find().sort({field:1})
 // ascending order: 1
 // descending order:-1
 ```
-MongoDB compariosn operator
+**MongoDB compariosn operator**: 
 ```javascript
 $eq : value are equal {"age":{$eq:20}}
 $ne : value are not equal {"age":{$ne:20}}
@@ -214,7 +214,7 @@ $in : value matchecd with in array {"age":{$in:[20,22,24}}
 $nin : value is not matched within an array {"age":{$nint:[20,24}}
 
 ```
-MongoDB logical Operators  
+**MongoDB logical Operators**:    
 ```javascript
 {"age":{$lt:20}}
 {"city":"Noda"}
