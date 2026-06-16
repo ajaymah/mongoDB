@@ -202,7 +202,36 @@ db.collection_name.find().sort({field:1})
 // ascending order: 1
 // descending order:-1
 ```
+MongoDB compariosn operator
+```javascript
+$eq : value are equal {"age":{$eq:20}}
+$ne : value are not equal {"age":{$ne:20}}
+$gt : value is greater than another value {"age":{$gt:20}}
+$gte : value is greater than or equal to another value {"age":{$eq:20}}
+$lt : value is less then another value {"age":{$lt:20}}
+$lte : value is less then or equal to  another value {"age":{$lte:20}}
+$in : value matchecd with in array {"age":{$in:[20,22,24}}
+$nin : value is not matched within an array {"age":{$nint:[20,24}}
 
+```
+MongoDB logical Operators  
+```javascript
+{"age":{$lt:20}}
+{"city":"Noda"}
+$and: {$and:[condition1, condition2]}  both query matched
+$ord: {$and:[condition1, condition2]}  either query matched
+$nor: {$and:[condition1, condition2]} both query fail
+$not: {$and:[condition1]} query does not matched
+```
+
+**MongoDb element query operator**:  
+```javascript
+db.collection_name.find({field:"val"})
+$exists
+{field:{$exists:<boolean>}} // true or false pass
+$type
+{field:{$type:<type>}} // int, string
+```
 
           
   
