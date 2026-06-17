@@ -393,8 +393,211 @@ db.library.aggregate([
   {project: {student:0}}
 ])
 ```
+$bucket (this will work numeric values)
+```javascript
+// student % example
+// data = [
+{_id:1, name, "ajay", percentage: 52},{_id:1, name, "Johan", percentage: 82},
+]
+// $bucket:
+db.students.aggregate([
+  {$bucket:{
+    groupBy:"percentage",
+    boundaries: [33, 45, 60, 80, 100]
+    default: "Fail students"
+    output:{
+              TotalStudent:{$sum:1}
+           }
+  }
+}])
+// $bucketAuto:
+db.students.aggregate([
+  {$bucketAuto:{
+    groupBy:"$percentage",
+    boundaries: [33, 45, 60, 80, 100]
+    buckets: 3,
+    output: {
+         count:{$sum:1},
+         Average_percentage:{$avg:"$percentage"}
+    }
+  }
+}])
 
-          
+//
+```
+**Aggregate $addFields Operator:**  
+```javascript
+data [{_id:1, FirstName:"Ajay", lastName:"kumar", marks:[50,40,60]},city:"Delhi"]
+// merge field value Like firstName + LastName  = FullName
+db.students.aggregate([
+  {
+    $addFields: {
+          fullName:{$concat:["$firstName", " ", "$lastname"]} }
+          totalMarks:{$sum:"$marks"},
+          firstName:"$$REMOVE",
+          lastName:"$$REMOVE"
+   }
+])
+Exp: 2
+db.students.aggregate([
+  {
+    $project: {
+          fullName:{$concat:["$firstName", " ", "$lastname"]}}
+   }
+]}
+
+db.students.aggregate([
+  {
+    $addFields: {
+          fullName:{$concat:["$firstName", " ", "$lastname"]} }
+          firstName:"$$REMOVE",
+          lastName:"$$REMOVE",
+          city:{ $ifNull:["$city","$$REMOVE"]}
+   }
+])
+
+
+db.students.aggregate([
+  {
+    $addFields: {
+          fullName:{$concat:["$firstName", " ", "$lastname"]}
+          firstName:"$$REMOVE",
+          lastName:"$$REMOVE",
+          city:{
+            $cond:{
+                    if: {$eq: ["$city","Delhi"},
+                   then: "$$REMOVE",
+                   else:"$city"
+             }]}
+          }
+   }
+])
+
+db.students.aggregate([
+   {$match:{_id:1}}
+  {
+    $addFields: {
+          fullName:{$concat:["$firstName", " ", "$lastname"]}
+          firstName:"$$REMOVE",
+          lastName:"$$REMOVE",
+          "profile.age": 30,
+          marks:{$concatArray: ["$marks",[70]}   // new value add
+   }
+])
+```
+**Aggregate $out**
+```javascript
+db.students.aggregate([
+  {$match:{"age":{$gt:20}}},
+  {$out:"valif_student"}  // create a new collection, if same name then replace
+])
+
+db.students.aggregate([
+  {$group: {"_id":"$class", students:{$push: "$name"}}},
+  {$out:"class_data"}  // create a new collection,
+])
+```
+
+**Aggregate $merge**
+```javascript
+2 database- personal, student
+data [{_id:1, name:"Ajay", age:23, class:"BCA" ]
+personal [{_id:1, city:"Delhi", phone:233444 ]
+db.personal.aggregate([
+  { $merge:{
+      into:"student",
+      on:"id",
+      wehenMatched:"merge",
+      whenNotMatched:"insert"
+    }
+  }
+])
+
+db.personal.aggregate([
+  { $merge:{
+      into:"students",
+      on:"_id",
+      wehenMatched:"merge",
+      whenNotMatched:"insert"
+    }
+  }
+])
+
+```
+**Aggregate $unionWith**
+```javascript
+db.student1.aggregate([
+  { $unionWith:{
+      coll:"student2"
+      }
+  }
+])
+```
+### Aggregate $facet operator ###  
+```javascript
+sales = [{_id:1, product:"mobile", price:100, quantity:10, region:"North"}]
+db.sales.aggregate([
+  { $group:{_id:"$product", totalSale:{$sum:{$multiply:["$price","$quantity"]}}},
+  {sort:{totalsale:-1}},
+  {limit:3}
+])
+// decreate server request //
+// many condison in single collection //
+db.sales.aggregate([
+  {
+    $facet:{
+        topproduct:[
+            { $group:{_id:"$product", totalSale:{$sum:{$multiply:["$price","$quantity"]}}},
+            {sort:{totalsale:-1}},
+            {limit:3}
+        ],
+        TotalRevenue:[
+            {$group:{_id:null, totalRevenue:{$sum:$multiply:["$price","$quantity"]}}}
+        ],
+        salesByReason:[
+             {$group:{_id:"$region", count:{$sum:1}}},
+             {#sort:{count:-1}}
+        ]
+    }
+  }
+])
+
+
+```
+**aggregate $fill operatior**
+```javascript
+students=[{_id:1, name:"ajay", class:"BCA", per:52},{_id:2, name:"johan", class:"MCA"}]
+db.students.aggregate([
+  {
+    $fill:{
+        $output:{
+            "per":{value:0}
+        }
+    }
+  }
+])
+
+db.students.aggregate([
+  {
+    $fill:{
+        $output:{
+            "per":{method:"locf"}
+        }
+    }
+  }
+])
+
+db.students.aggregate([
+  {    
+    $fill:{
+        sortBy:{_id:-1},
+        $output:{
+            "per":{method:"linear"}   /// center point middle
+        }        
+    }
+  }
+])
+```
   
 
 
