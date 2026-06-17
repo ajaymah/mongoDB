@@ -252,7 +252,7 @@ db.sales.find({
   $expe:{&gt:["$price",{$mutiply:["$cost",1.2]}]}
 })
 ```
-findOneAndupdate
+findOneAndupdate and findOneAndDelete
 ```javascript
 db.findOneAndUpdate(
   {name: "sachin"},
@@ -263,6 +263,19 @@ db.findOneAndUpdate(
     upsert: true
   }
 )
+db.student.findoneAndDelete(
+{name:"ajay"},
+{projection:{name:1,}, sort:{age:1}} // acending oder age
+)
+```
+MongoDB Aggregration Pipeline operators
+```javascript
+$match, $count, $sort, $sortByCount, $project, $limit, $skip, $sample
+db.collection_name.aggregate([
+{$match:{age:{$gt:20}}},   // stage-1
+{$sort:{age:1}},           // stage-2
+{$project:{name:1,class:1,_id:0}} // stage-3
+])
 ```
 
           
