@@ -597,6 +597,18 @@ db.students.aggregate([
     }
   }
 ])
+
+db.students.aggregate([
+  {    
+    $fill:{
+        sortBy:{_id:-1},
+        partitionby:{"class":"$class"},
+        $output:{
+            "per":{method:"linear"}   /// center point middle
+        }        
+    }
+  }
+])
 ```
   
 
