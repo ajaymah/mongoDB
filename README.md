@@ -233,6 +233,38 @@ $type
 {field:{$type:<type>}} // int, string
 ```
 
+**MongoDB Evaluation Query operation**:  
+```javascript
+$regex: Matches string field to a pattern
+{field:{$regex:/pattern/<options>}}   // "^S","an$"
+$expr: allows field comparisons with documents
+{$expr:{<expression>}}
+$mod : Matches numbers based on remainder
+{field:{$mod:[divisor, remainder]}} // {age:{$mod:[2,0}}
+
+Example:
+db.student.find({name:{$regex:"khan"}}) // case insensetive//
+db.student.find({name:{$regex:/khan/i}}) // i represent in regular ex.. case insensetive//
+db.monthlyBudget.find({
+  $expr:{$gt:["$spent","$budget"]}   /// compare one documet with two fields //
+})
+db.sales.find({
+  $expe:{&gt:["$price",{$mutiply:["$cost",1.2]}]}
+})
+```
+findOneAndupdate
+```javascript
+db.findOneAndUpdate(
+  {name: "sachin"},
+  {$set:{age:25, class:"BIT"}},
+  {
+    returnDocument:"after",
+    projection:{name:1, age:1, _id:0},
+    upsert: true
+  }
+)
+```
+
           
   
 
