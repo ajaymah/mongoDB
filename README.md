@@ -268,14 +268,40 @@ db.student.findoneAndDelete(
 {projection:{name:1,}, sort:{age:1}} // acending oder age
 )
 ```
-MongoDB Aggregration Pipeline operators
+### MongoDB Aggregration Pipeline operators ###
 ```javascript
 $match, $count, $sort, $sortByCount, $project, $limit, $skip, $sample
 db.collection_name.aggregate([
-{$match:{age:{$gt:20}}},   // stage-1
-{$sort:{age:1}},           // stage-2
-{$project:{name:1,class:1,_id:0}} // stage-3
+  {$match:{age:{$gt:20}}},   // stage-1
+  {$sort:{age:1}},           // stage-2
+  {$project:{name:1,class:1,_id:0}} // stage-3
 ])
+
+db.collection_name.aggregate([
+  {$match: {$and: [   
+      {$age:{ $gt:20}},
+      {class:"BCA"}
+    ]}
+  }
+]}
+
+db.collection_name.aggregate([
+  {$match: {age: {$lt:20}}},
+  {$count: "names"}
+]}
+
+db.collection_name.aggregate([
+  {$match: {age: {$gt:20}}},
+  {$sort:{age:1, name:1}},
+  {$project:{name:1, calss:1, _id:0 }}
+]}
+
+db.collection_name.aggregate([
+  {$sort:{age:1, name:1}},
+  {$project:{name:1, calss:1, _id:0,
+    isValidate:{$gt:["$age",20]}
+  }}
+]}
 ```
 
           
