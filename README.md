@@ -302,6 +302,96 @@ db.collection_name.aggregate([
     isValidate:{$gt:["$age",20]}
   }}
 ]}
+
+db.students.aggregate([
+  {$sortByCount:$class}
+])
+
+//$Limit 
+db.collection_name.aggregate([
+  {$match:{age:{$gt:20}}},
+  {$sort:{age:1, name:1,]},
+  {$project:{name:1, calss:1, _id:0 }},
+  {$skip:2},
+  {$limit: 2}
+]}
+
+db.collection_name.aggregate([
+  { $sample: {size:2}}  // search randam data only 2 items
+])
+```
+Gropup
+```javascript
+db.collection_name.aggregate([
+  {$match: {age:{$gt: 20}}},
+  {
+     $group :{
+        _id: "class",
+         count: {$sum: 1},
+        // count: {$count: {}}//
+     }
+  }
+])
+
+db.collection_name.aggregate([
+  {
+     $group :{
+        _id: "class",
+         student: {$push: "$name"}
+     }
+  }
+])
+
+db.collection_name.aggregate([
+  {
+     $group :{
+        _id: "$age",
+         student: {$push: "$$ROOT"}
+     }
+  }
+])
+```
+### MongoDB Aggregate $lookup operator  ###
+**get Data with the help of join collection,**
+```javascript
+// students DB Data
+[{_id:1, name:"Ajay", class:"BCA"},{_id:2, name:"Johan", class:"Btech"},{_id:3, name:"Smith", class:"BSC"},{_id:4, name:"Jonathan", class:"BCA"},]
+//
+// library DB Data 
+[{_id:1, book:"Atomic habits", student_id:1},{_id:2, book:"You Can", student_id:2},{_id:3, book:"India Today", student_id:4},]
+//
+db.library.aggregate([
+  $lookup:{
+     from: "students"
+     localField:"student_id"
+     foreignField:"_id"
+     as:"Student"
+  }
+])
+
+db.students.aggregate([
+  $lookup:{
+     from: "library"
+     localField:"_id"
+     foreignField:"student_id"
+     as:"Book"
+  },
+  {$unwind:"$Book"}  // if adding this then data will be object case
+])
+
+// $replaceRoot Operator
+db.library.aggregate([
+  $lookup:{
+     from: "students"
+     localField:"student_id"
+     foreignField:"_id"
+     as:"Student"
+  },
+  {$replaceRoot:{newRoot:{$mergeObject:[
+    {$arrayElemAt:["$student",0]}, "$$ROOT"
+  ]}}},
+  {project: {student:0}}
+])
 ```
 
           
